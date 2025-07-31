@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Shorts</title>
+  <style>
+    body { margin:0; background:#111; color:#fff; font-family:sans-serif; text-align:center; }
+    .logo { margin:20px; font-size:2em; font-weight:bold; }
+    .video-container { background:#222; padding:20px; border-radius:16px; margin:auto; width:350px; }
+    video { width:100%; border-radius:8px; margin-bottom:16px; height:400px; }
+    button { margin:10px 20px; padding:10px 16px; border-radius:6px; border:none; background:#ffc700; font-size:18px; cursor:pointer; }
+    #videoTitle { margin: 12px 0 0 0; font-weight: bold; font-size: 1.1em; }
+    a { color:#ffc700; text-decoration:none; font-size: 1em;}
+  </style>
+</head>
+<body>
+  <div class="logo">Your Shorts Logo Here</div>
+  <div class="video-container" id="videoContainer"></div>
+  <a href="upload.html">Upload a New Short →</a>
+  <script>
+    // CHANGE this to your deployed backend API url:
+    const backendURL = "https://YOUR-BACKEND-URL.onrender.com";
+    // Replace above with your real backend Render URL!
+
+    let videos = [];
+    let current = 0;
+
+    async function fetchVideos() {
+      const res = await fetch(backendURL + '/videos');
+      videos = await res.json();
+      if (videos.length > 0) {
+        loadVideo(current);
+      } else {
+        document.getElementById('videoContainer').innerHTML = '<p>No Shorts yet! Go upload one 🌟</p>';
+      }
+    }
+
+    function loadVideo(idx) {
+      if (videos.length === 0) return;
+      const vid = videos[idx];
+      document.getElementById('videoContainer').innerHTML = `
+        <video id="shortsVideo" controls autoplay loop>
+          <source src="${vid.url}" type="video/mp4">
+          Your browser does not support video!
+        </video>
+        <div>
+          <button onclick="prevVideo()">⬆️ Prev</button>
+          <button onclick="nextVideo()">⬇️ Next</button>
+        </div>
+        <div id="videoTitle">${vid.title || ""}</div>
+      `;
+    }
+
+    function nextVideo() {
+      if (videos.length === 0) return;
+      current = (current + 1) % videos.length;
+      loadVideo(current);
+    }
+    function prevVideo() {
+      if (videos.length === 0) return;
+      current = (current - 1 + videos.length) % videos.length;
+      loadVideo(current);
+    }
+    window.nextVideo = nextVideo;
+    window.prevVideo = prevVideo;
+
+    window.onload = fetchVideos;
+  </script>
+</body>
+</html>
