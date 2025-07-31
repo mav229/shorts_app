@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Shorts</title>
+  <style>
+    body { margin:0; background:#111; color:#fff; font-family:sans-serif; text-align:center; }
+    .logo { margin:20px; font-size:2em; font-weight:bold; }
+    .video-container { background:#222; padding:20px; border-radius:16px; margin:auto; width:350px; }
+    video { width:100%; border-radius:8px; margin-bottom:16px; }
+    button { margin:5px 10px; }
+  </style>
+</head>
+<body>
+  <div class="logo">Your Logo Here</div>
+  <div class="video-container">
+    <video id="shortsVideo" controls autoplay loop>
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      Your browser does not support video!
+    </video>
+    <div>
+      <button onclick="prevVideo()">⬆️ Prev</button>
+      <button onclick="nextVideo()">⬇️ Next</button>
+    </div>
+  </div>
+  <script>
+    // For example, hardcode 2–3 links for now. Later, fetch from backend.
+    const videos = [
+      "https://www.w3schools.com/html/mov_bbb.mp4",
+      "https://www.w3schools.com/html/movie.mp4"
+    ];
+    let current = 0;
+    function loadVideo(idx) {
+      const vid = document.getElementById('shortsVideo');
+      vid.src = videos[idx];
+      vid.play();
+    }
+    function nextVideo() {
+      current = (current+1)%videos.length;
+      loadVideo(current);
+    }
+    function prevVideo() {
+      current = (current-1+videos.length)%videos.length;
+      loadVideo(current);
+    }
+  </script>
+</body>
+</html>
